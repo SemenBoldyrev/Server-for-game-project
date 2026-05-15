@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "express": "^5.2.1",
+    "libm": "^2.0.0-b1",
     "sqlite3": "^6.0.1"
   }
 }

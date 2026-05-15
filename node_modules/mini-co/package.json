@@ -1,0 +1,23 @@
+{
+	"name": "mini-co",
+	"description": "A mini generator coordinator",
+	"version": "1.0.0",
+	"author": "Nanqiao Deng <nqdeng@gmail.com>",
+	"keywords": [
+		"utilities",
+		"util"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/tianmajs/mini-co.git"
+	},
+	"license": "MIT",
+	"main": "./index.js",
+	"devDependencies": {
+		"mocha": "*",
+		"should": "*"
+	},
+	"scripts": {
+		"test": "mocha"
+	}
+}
