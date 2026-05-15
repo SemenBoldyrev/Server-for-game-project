@@ -46,7 +46,8 @@ app.get('/regenerate', (req, res) => {
 
 app.get('/scores', (req, res) => {
     const limit = 9;
-    const sql = `SELECT ROW_NUMBER() OVER (ORDER BY score DESC) as rank FROM Scores ORDER BY score DESC, * LIMIT ${limit};`;
+    //ROW_NUMBER() OVER (ORDER BY score DESC) as rank
+    const sql = `SELECT * FROM Scores ORDER BY score DESC, * LIMIT ${limit};`;
     SendRequest(sql, res);
 });
 
