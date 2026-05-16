@@ -94,7 +94,7 @@ app.post('/scores/add', (req, res) => {
             score = ${score};
     `;
     CommentRequest('trying to add score request', sql, '---');
-    con.run(sql, res);
+    con.run(sql);
     CommentRequest('Request successful', "---", '---');
 });
 
