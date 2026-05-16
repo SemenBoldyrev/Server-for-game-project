@@ -42,6 +42,16 @@ app.get('/regenerate', (req, res) => {
         score INTEGER NOT NULL
     );`);});
   res.send('Database regenerated!');
+
+  CommentRequest('regenerate', `DROP TABLE IF EXISTS Scores;
+        CREATE TABLE IF NOT EXISTS Scores (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        difficulty INTEGER NOT NULL,
+        correct INTEGER NOT NULL,
+        incorrect INTEGER NOT NULL,
+        score INTEGER NOT NULL
+    );`, 'Database has been regenerated, all data is permaently lost!');
 });
 
 app.get('/scores', (req, res) => {
@@ -73,6 +83,7 @@ app.post('/scores/add', (req, res) => {
             score = ${score};
     `;
     sendRequest(sql, res);
+    CommentRequest('add score request', sql, 'New score has been added or updated!');
 });
 
 function SendRequest(sql, res) 
@@ -82,3 +93,11 @@ function SendRequest(sql, res)
         res.json(result);
     });
 } 
+
+function CommentRequest(name, query, additional)
+{
+    console.log(`
+        >>>>>>> ${name} 
+        >>> by query: ${query} 
+        >>> additional: ${additional}`);
+}
