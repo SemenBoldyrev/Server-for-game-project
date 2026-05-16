@@ -71,9 +71,8 @@ app.get('/scores/name/:name', (req, res) => {
 });
 
 app.post('/scores/add', (req, res) => {
-    const { name, difficulty, correct, incorrect, score } = req.body;
-
     console.log('Received request body:', req.body);
+    const { name, difficulty, correct, incorrect, score } = req.body;
     console.log('Extracted values:', { name, difficulty, correct, incorrect, score });
 
     if (!req.body) {
