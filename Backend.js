@@ -13,7 +13,6 @@ const con = new sqlite3.Database('MultiplayerDB.sqlite', (err) => {
 
 const app = express();
 
-app.use(express.json());
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.append("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -21,7 +20,7 @@ app.use((req, res, next) => {
     res.append("Access-Control-Allow-Credentials", "true");
     res.append("Content-Type", "application/json");
     next();
-});
+}, express.json());
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}/`);
