@@ -89,8 +89,9 @@ app.post('/scores/add', (req, res) => {
             incorrect = ${incorrect},
             score = ${score};
     `;
+    CommentRequest('trying to add score request', sql, '---');
     sendRequest(sql, res);
-    CommentRequest('add score request', sql, 'New score has been added or updated!');
+    CommentRequest('Request successful', "---", '---');
 });
 
 function SendRequest(sql, res) 
