@@ -64,9 +64,9 @@ app.get('/scores', (req, res) => {
 app.get('/scores/name/:name', (req, res) => {
     const { name } = req.params;
     const limit = 9;
-    const sql = `SELECT *, ROW_NUMBER() OVER (ORDER BY score DESC) as rank FROM Scores ORDER BY score DESC LIMIT ${limit};
+    const sql = `SELECT * FROM Scores ORDER BY score DESC LIMIT ${limit};
     UNION ALL
-    SELECT *, ROW_NUMBER() OVER (ORDER BY score DESC) as rank FROM Scores WHERE name = '${name}';`;
+    SELECT * FROM Scores WHERE name = '${name}';`;
     SendRequest(sql, res);
 });
 
