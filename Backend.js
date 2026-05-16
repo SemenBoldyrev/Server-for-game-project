@@ -70,24 +70,15 @@ app.get('/scores', (req, res) => {
 });
 
 app.get('/scores/:name', (req, res) => {
-    app.get('/scores/rank/:name', (req, res) => {
     const { name } = req.params;
-
-    const sql = `
-        SELECT name, score, difficulty, correct, incorrect, rank 
-        FROM (
+    //not the best, but works fine, leave this as is, considering the scale of
+    const sql = `WITH Leaderboard AS (
             SELECT *, 
                    ROW_NUMBER() OVER (ORDER BY score DESC) as rank 
             FROM Scores
-        ) 
-        WHERE name = ?;
-    `;
-
-    // Bind parameters safely to avoid SQL injection or single-quote crashes
-    const params = [name];
-
-    con.run(sql, params);
-});
+        )
+        SELECT * FROM Leaderboard WHERE name = ${name};`;
+    SendRequest(sql, res);
 });
 
 // app.post('/scores/add', (req, res) => {
