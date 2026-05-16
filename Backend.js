@@ -71,9 +71,9 @@ app.get('/scores/name/:name', (req, res) => {
 });
 
 app.post('/scores/add', (req, res) => {
-    console.log('Received request body:', req.body);
+    console.log('Received request:', req);
     const { name, difficulty, correct, incorrect, score } = req.body;
-    console.log('Extracted values:', { name, difficulty, correct, incorrect, score });
+    console.log('Extracted body values:', { name, difficulty, correct, incorrect, score });
 
     if (!req.body) {
         return res.status(400).send({ error: "Missing request body" });
