@@ -63,21 +63,14 @@ app.get('/regenerate', (req, res) => {
 });
 
 app.get('/scores', (req, res) => {
-    const limit = 9;
     //ROW_NUMBER() OVER (ORDER BY score DESC) as rank
-    const sql = `SELECT *, ROW_NUMBER() OVER (ORDER BY score DESC) as rank FROM Scores ORDER BY score DESC LIMIT ${limit};`;
+    const sql = `SELECT *, ROW_NUMBER() OVER (ORDER BY score DESC) as rank FROM Scores ORDER BY score;`;
     SendRequest(sql, res);
 });
 
-app.get('/scores/:name', (req, res) => {
-    const { name } = req.params;
-    //not the best, but works fine, leave this as is, considering the scale of
-    const sql = `WITH Leaderboard AS (
-            SELECT *, 
-                   ROW_NUMBER() OVER (ORDER BY score DESC) as rank 
-            FROM Scores
-        )
-        SELECT * FROM Leaderboard WHERE name = ${name};`;
+app.get('/scores/:limit', (req, res) => {
+    const { limit } = req.params;
+    const sql = `SELECT *, ROW_NUMBER() OVER (ORDER BY score DESC) as rank FROM Scores ORDER BY score DESC LIMIT ${limit};`;
     SendRequest(sql, res);
 });
 
