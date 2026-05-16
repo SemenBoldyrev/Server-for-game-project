@@ -78,67 +78,73 @@ app.get('/scores/name/:name', (req, res) => {
     SendRequest(sql, res);
 });
 
-app.post('/scores/add', (req, res) => {
-    if (!req.body) {
-        return res.status(400).send({ error: "Missing request body" });
-    }
-    const { name, difficulty, correct, incorrect, score } = req.body;
-
-    const sql = `
-        INSERT INTO Scores (name, difficulty, correct, incorrect, score) 
-        VALUES ("${name}", ${difficulty}, ${correct}, ${incorrect}, ${score})
-        ON CONFLICT(name) DO UPDATE SET
-            difficulty = ${difficulty},
-            correct = ${correct},
-            incorrect = ${incorrect},
-            score = ${score};
-    `;
-    CommentRequest('trying to add score request', sql, '---');
-    con.run(sql);
-    CommentRequest('Request successful', "---", '---');
-});
-
 // app.post('/scores/add', (req, res) => {
 //     if (!req.body) {
 //         return res.status(400).send({ error: "Missing request body" });
 //     }
-    
 //     const { name, difficulty, correct, incorrect, score } = req.body;
+
 //     const sql = `
 //         INSERT INTO Scores (name, difficulty, correct, incorrect, score) 
-//         VALUES (?, ?, ?, ?, ?)
+//         VALUES ("${name}", ${difficulty}, ${correct}, ${incorrect}, ${score})
 //         ON CONFLICT(name) DO UPDATE SET
-//             difficulty = ?,
-//             correct = ?,
-//             incorrect = ?,
-//             score = ?;
+//             difficulty = ${difficulty},
+//             correct = ${correct},
+//             incorrect = ${incorrect},
+//             score = ${score};
 //     `;
 //     CommentRequest('trying to add score request', sql, '---');
-
-//     const params = [
-//         name, difficulty, correct, incorrect, score, 
-//         difficulty, correct, incorrect, score        
-//     ];
-
-//     con.run(sql, params, function (err) {
-//         if (err) {
-//             console.error("CRITICAL DATABASE ERROR:", err.message);
-//             console.error("SQL query attempted:", sql);
-            
-//             return res.status(500).json({ 
-//                 error: "Internal Server Error", 
-//                 details: err.message 
-//             });
-//         }
-
-//         CommentRequest('Request successful', "---", '---');
-//         res.json({ 
-//             success: true, 
-//             message: "New score has been added or updated!",
-//             changes: this.changes
-//         });
-//     });
+//     con.run(sql);
+//     CommentRequest('Request successful', "---", '---');
 // });
+
+app.post('/scores/add', (req, res) => {
+    if (!req.body) {
+        return res.status(400).send({ error: "Missing request body" });
+    }
+    
+    // -- creation
+    const { name, difficulty, correct, incorrect, score } = req.body;
+    const sql = `
+        INSERT INTO Scores (name, difficulty, correct, incorrect, score) 
+        VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT(name) DO UPDATE SET
+            difficulty = ?,
+            correct = ?,
+            incorrect = ?,
+            score = ?;
+    `;
+    CommentRequest('trying to add score request', sql, '---');
+
+    // need to times for ?
+    const params = [
+        name, difficulty, correct, incorrect, score, 
+        difficulty, correct, incorrect, score        
+    ];
+
+    // -- running
+    con.run(sql, params, function (err) {
+        if (err) {
+            console.error("CRITICAL DATABASE ERROR:", err.message);
+            console.error("SQL query attempted:", sql);
+            
+            return res.status(500).json({ 
+                error: "Internal Server Error", 
+                details: err.message 
+            });
+        }
+
+        // -- return
+        CommentRequest('Request successful', "---", '---');
+        res.json({ 
+            success: true, 
+            message: "New score has been added or updated!",
+            changes: this.changes
+        });
+    });
+
+    // somehow this ai solution works, so i will leave old and new one here 
+});
 
 function SendRequest(sql, res) 
 {
