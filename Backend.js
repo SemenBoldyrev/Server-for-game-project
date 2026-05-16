@@ -101,6 +101,7 @@ function SendRequest(sql, res)
     } catch (error) {
         console.log(`Error occurred while sending request: ${error}\nSQL: ${sql}`);
         res.status(500).json({ error: 'Internal Server Error' });
+        throw error;
     }
 } 
 
