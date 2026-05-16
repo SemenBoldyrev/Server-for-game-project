@@ -65,13 +65,13 @@ app.get('/regenerate', (req, res) => {
 app.get('/scores', (req, res) => {
     const limit = 9;
     //ROW_NUMBER() OVER (ORDER BY score DESC) as rank
-    const sql = `SELECT * FROM Scores ORDER BY score DESC LIMIT ${limit};`;
+    const sql = `SELECT *, ROW_NUMBER() OVER (ORDER BY score DESC) as rank FROM Scores ORDER BY score DESC LIMIT ${limit};`;
     SendRequest(sql, res);
 });
 
 app.get('/scores/:name', (req, res) => {
     const { name } = req.params;
-    const sql = `SELECT * FROM Scores WHERE name = '${name}'`;
+    const sql = `SELECT *, ROW_NUMBER() OVER (ORDER BY score DESC) as rank FROM Scores WHERE name = '${name}'`;
     SendRequest(sql, res);
 });
 
