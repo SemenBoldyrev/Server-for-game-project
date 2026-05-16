@@ -69,12 +69,9 @@ app.get('/scores', (req, res) => {
     SendRequest(sql, res);
 });
 
-app.get('/scores/additional/:name', (req, res) => {
+app.get('/scores/:name', (req, res) => {
     const { name } = req.params;
-    const limit = 9;
-    const sql = `SELECT * FROM Scores ORDER BY score DESC LIMIT ${limit}
-    UNION ALL
-    SELECT * FROM Scores WHERE name = '${name}'`;
+    const sql = `SELECT * FROM Scores WHERE name = '${name}'`;
     SendRequest(sql, res);
 });
 
@@ -146,10 +143,10 @@ app.post('/scores/add', (req, res) => {
     // somehow this ai solution works, so i will leave old and new one here 
 });
 
-function SendRequest(sql, res) 
+async function SendRequest(sql, res) 
 {
     try {
-        con.all(sql, function (err, result) {
+        await con.all(sql, function (err, result) {
             res.json(result);
         });
     } catch (error) {
