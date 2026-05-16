@@ -43,7 +43,7 @@ app.get('/regenerate', (req, res) => {
         con.run(`DROP TABLE IF EXISTS Scores;`);
         con.run(`CREATE TABLE IF NOT EXISTS Scores (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
+        name TEXT NOT NULL UNIQUE,
         difficulty INTEGER NOT NULL,
         correct INTEGER NOT NULL,
         incorrect INTEGER NOT NULL,
