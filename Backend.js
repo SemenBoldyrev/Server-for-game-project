@@ -73,11 +73,9 @@ app.get('/scores/additional/:name', (req, res) => {
     const { name } = req.params;
     const limit = 9;
     const sql = `
-        SELECT * FROM (
-            SELECT * FROM Scores 
-            ORDER BY score DESC 
-            LIMIT ?
-        )
+        SELECT * FROM Scores 
+        ORDER BY score DESC 
+        LIMIT ?
         UNION ALL
         SELECT * FROM Scores 
         WHERE name = ?;
