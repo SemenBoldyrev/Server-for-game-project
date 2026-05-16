@@ -19,9 +19,8 @@ app.use((req, res, next) => {
     res.append("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     res.append("Access-Control-Allow-Credentials", "true");
     res.append("Content-Type", "application/json");
-    res.append(express.json())
     next();
-});
+}, express.json());
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}/`);
