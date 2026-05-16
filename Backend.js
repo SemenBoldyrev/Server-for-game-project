@@ -100,7 +100,7 @@ function SendRequest(sql, res)
         });
     } catch (error) {
         console.error(`Error occurred while sending request: ${error}\nSQL: ${sql}`);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: 'Internal Server Error, problems in script' });
     }
 } 
 
