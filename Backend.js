@@ -73,8 +73,8 @@ app.get('/scores/:name', (req, res) => {
     const { name } = req.params;
     const limit = 9;
     const sql = `SELECT * FROM Scores ORDER BY score DESC LIMIT ${limit}
-    UNION ALL
-    SELECT * FROM Scores WHERE name = '${name}';`;
+    UNION
+    SELECT * FROM Scores WHERE name = '${name}'`;
     SendRequest(sql, res);
 });
 
