@@ -78,31 +78,83 @@ app.get('/scores/name/:name', (req, res) => {
     SendRequest(sql, res);
 });
 
+// app.post('/scores/add', (req, res) => {
+//     if (!req.body) {
+//         return res.status(400).send({ error: "Missing request body" });
+//     }
+//     const { name, difficulty, correct, incorrect, score } = req.body;
+
+//     const sql = `
+//         INSERT INTO Scores (name, difficulty, correct, incorrect, score) 
+//         VALUES ("${name}", ${difficulty}, ${correct}, ${incorrect}, ${score})
+//         ON CONFLICT(name) DO UPDATE SET
+//             difficulty = ${difficulty},
+//             correct = ${correct},
+//             incorrect = ${incorrect},
+//             score = ${score};
+//     `;
+//     CommentRequest('trying to add score request', sql, '---');
+//     SendRequest(sql, res);
+//     CommentRequest('Request successful', "---", '---');
+// });
 app.post('/scores/add', (req, res) => {
     if (!req.body) {
         return res.status(400).send({ error: "Missing request body" });
     }
+    
     const { name, difficulty, correct, incorrect, score } = req.body;
 
+    // Standard SQLite syntax for Upsert (ON CONFLICT)
+    // Note: 'name' MUST be a PRIMARY KEY or UNIQUE column in your database for this to work!
     const sql = `
         INSERT INTO Scores (name, difficulty, correct, incorrect, score) 
-        VALUES ("${name}", ${difficulty}, ${correct}, ${incorrect}, ${score})
+        VALUES (?, ?, ?, ?, ?)
         ON CONFLICT(name) DO UPDATE SET
-            difficulty = ${difficulty},
-            correct = ${correct},
-            incorrect = ${incorrect},
-            score = ${score};
+            difficulty = ?,
+            correct = ?,
+            incorrect = ?,
+            score = ?;
     `;
+    
     CommentRequest('trying to add score request', sql, '---');
-    SendRequest(sql, res);
-    CommentRequest('Request successful', "---", '---');
+
+    // Because we use placeholders for both INSERT and UPDATE, 
+    // we need to pass the variables twice in the array order they appear.
+    const params = [
+        name, difficulty, correct, incorrect, score, // For the INSERT part
+        difficulty, correct, incorrect, score        // For the UPDATE part
+    ];
+
+    // Execute directly using your database connection instance ('con')
+    con.run(sql, params, function (err) {
+        if (err) {
+            // SAFE ERROR HANDLING: Log to Render console, do NOT 'throw'
+            console.error("CRITICAL DATABASE ERROR:", err.message);
+            console.error("SQL query attempted:", sql);
+            
+            // Return 500 status so Render doesn't crash with a 502/503
+            return res.status(500).json({ 
+                error: "Internal Server Error", 
+                details: err.message 
+            });
+        }
+
+        // If your database call is successful:
+        CommentRequest('Request successful', "---", '---');
+        
+        // Return a clean success status to your frontend
+        res.json({ 
+            success: true, 
+            message: "New score has been added or updated!",
+            changes: this.changes // 'this.changes' contains the number of rows affected in sqlite3
+        });
+    });
 });
 
 function SendRequest(sql, res) 
 {
     try {
         con.all(sql, function (err, result) {
-            if (err) throw err;
             res.json(result);
         });
     } catch (error) {
