@@ -93,10 +93,15 @@ app.post('/scores/add', (req, res) => {
 
 function SendRequest(sql, res) 
 {
-    con.all(sql, function (err, result) {
-        if (err) throw err;
-        res.json(result);
-    });
+    try {
+        con.all(sql, function (err, result) {
+            if (err) throw err;
+            res.json(result);
+        });
+    } catch (error) {
+        console.error(`Error occurred while sending request: ${error}\nSQL: ${sql}`);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 } 
 
 function CommentRequest(name, query, additional)
