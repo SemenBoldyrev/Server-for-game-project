@@ -65,17 +65,14 @@ app.post('/scores/add', (req, res) => {
 
     const sql = `
         INSERT INTO Scores (name, difficulty, correct, incorrect, score) 
-        VALUES (?, ?, ?, ?, ?)
+        VALUES ("${name}", ${difficulty}, ${correct}, ${incorrect}, ${score})
         ON CONFLICT(name) DO UPDATE SET
-            difficulty = excluded.difficulty,
-            correct = excluded.correct,
-            incorrect = excluded.incorrect,
-            score = excluded.score;
+            difficulty = ${difficulty},
+            correct = ${correct},
+            incorrect = ${incorrect},
+            score = ${score};
     `;
-
-    const params = [name, difficulty, correct, incorrect, score];
-
-    con.run(sql, params);
+    sendRequest(sql, res);
 });
 
 function SendRequest(sql, res) 
