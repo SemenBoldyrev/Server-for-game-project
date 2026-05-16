@@ -72,17 +72,10 @@ app.get('/scores', (req, res) => {
 app.get('/scores/additional/:name', (req, res) => {
     const { name } = req.params;
     const limit = 9;
-    const sql = `
-        SELECT * FROM Scores 
-        ORDER BY score DESC 
-        LIMIT ?
-        UNION ALL
-        SELECT * FROM Scores 
-        WHERE name = ?;
-    `;
-
-    const params = [limit, name];
-    con.run(sql, params);
+    const sql = `SELECT * FROM Scores ORDER BY score DESC LIMIT ${limit}
+    UNION ALL
+    SELECT * FROM Scores WHERE name = '${name}'`;
+    SendRequest(sql, res);
 });
 
 // app.post('/scores/add', (req, res) => {
