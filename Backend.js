@@ -99,6 +99,8 @@ app.post('/scores/add', (req, res) => {
         return res.status(400).send({ error: "Missing request body" });
     }
     
+
+
     // -- creation
     const { name, difficulty, correct, incorrect, score } = req.body;
     const sql = `
@@ -109,7 +111,6 @@ app.post('/scores/add', (req, res) => {
             correct = excluded.correct,
             incorrect = excluded.incorrect,
             score = excluded.score
-        WHERE excluded.score > COALESCE(Scores.score, -1);
     `;
     CommentRequest('trying to add score request', sql, '---');
 
