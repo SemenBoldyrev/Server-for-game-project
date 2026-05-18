@@ -105,10 +105,11 @@ app.post('/scores/add', (req, res) => {
         INSERT INTO Scores (name, difficulty, correct, incorrect, score) 
         VALUES (?, ?, ?, ?, ?)
         ON CONFLICT(name) DO UPDATE SET
-            difficulty = ?,
-            correct = ?,
-            incorrect = ?,
-            score = ?;
+            difficulty = excluded.difficulty,
+            correct = excluded.correct,
+            incorrect = excluded.incorrect,
+            score = excluded.score
+        WHERE excluded.score > Scores.score;
     `;
     CommentRequest('trying to add score request', sql, '---');
 
