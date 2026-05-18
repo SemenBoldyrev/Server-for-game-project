@@ -111,6 +111,7 @@ app.post('/scores/add', (req, res) => {
             correct = excluded.correct,
             incorrect = excluded.incorrect,
             score = excluded.score
+        WHERE excluded.score > Scores.score;
     `;
     CommentRequest('trying to add score request', sql, '---');
 
