@@ -118,7 +118,7 @@ app.post('/scores/add', (req, res) => {
     // need to times for ?
     const params = [
         name, difficulty, correct, incorrect, score, 
-        difficulty, correct, incorrect, score        
+        // difficulty, correct, incorrect, score        
     ];
 
     // -- running
